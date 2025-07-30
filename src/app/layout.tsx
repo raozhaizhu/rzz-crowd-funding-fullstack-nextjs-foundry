@@ -23,11 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
+        <header className='h-50'></header>
+        <main className='min-h-[calc(100vh - 400px)]'> {children}</main>
+        <footer className='h-50'></footer>
       </body>
     </html>
   );

@@ -1,7 +1,5 @@
 // ANCHOR React & library
 
-import HomePageComponent from "./page-component";
-
 // ANCHOR Components
 
 // ANCHOR Types & Interfaces
@@ -9,7 +7,7 @@ import HomePageComponent from "./page-component";
 // ANCHOR Constants
 
 // ANCHOR Component definition
-const HomePage = () => {
+const HomePageComponent = () => {
   // ANCHOR Hooks (state, ref, effect, etc.)
 
   // ANCHOR Derived values (memo, callback)
@@ -19,6 +17,6 @@ const HomePage = () => {
   // ANCHOR Render helpers (optional functions returning JSX)
 
   // ANCHOR Render
-  return <HomePageComponent />;
+  return <section className='container mx-auto'>HomePageComponent</section>;
 };
-export default HomePage;
+export default HomePageComponent;
