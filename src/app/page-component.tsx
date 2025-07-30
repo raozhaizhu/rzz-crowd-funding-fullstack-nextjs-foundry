@@ -17,6 +17,10 @@ const HomePageComponent = () => {
   // ANCHOR Render helpers (optional functions returning JSX)
 
   // ANCHOR Render
-  return <section className='container mx-auto'>HomePageComponent</section>;
+  return (
+    <section className="container mx-auto">
+      <div className="flex justify-center">HomePageComponent</div>
+    </section>
+  );
 };
 export default HomePageComponent;
