@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <Providers>
-          <header className='h-50'>
+          <header>
             <Header />
           </header>
           <main className='min-h-[calc(100vh - 400px)]'> {children}</main>

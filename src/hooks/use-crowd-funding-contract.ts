@@ -14,7 +14,6 @@ import {
 import { useState } from "react";
 import { bigint, z } from "zod";
 import { isAddress, parseEther } from "viem";
-import { getCurrentTimeStamp } from "@/utils/getCurrentTimeStamp";
 
 type Campaign = {
   owner: `0x${string}`;
@@ -29,8 +28,9 @@ type Campaign = {
 
 type DonationInfo = Pick<Campaign, "donations" | "donators">;
 
-const ONE_DAY_IN_SECONDS = 24 * 60 * 60;
 const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const ONE_DAY_IN_SECONDS = 24 * 60 * 60 * 1000; // 一天时间，以毫秒计
+const GRACE_MS = 300 * 1000; // 允许延迟 300 秒
 
 export const createCampaignInfoSchemaClient = z.object({
   // 校验 owner 格式是否为钱包地址
@@ -55,10 +55,11 @@ export const createCampaignInfoSchemaClient = z.object({
     }),
 
   // deadline必须至少在 3 天后（合同本身约定是在未来即可）
+  // deadline已经毫秒计
   deadline: z
     .number()
     .int()
-    .min(getCurrentTimeStamp() + 3 * ONE_DAY_IN_SECONDS, {
+    .min(Date.now() + 3 * ONE_DAY_IN_SECONDS + GRACE_MS, {
       message: "Deadline must be at least 3 days from now",
     }),
   // 筹集目标为整数，至少 1 eth

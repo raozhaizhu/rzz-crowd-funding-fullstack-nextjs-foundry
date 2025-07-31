@@ -38,7 +38,7 @@ export function MagicCard({
         mouseY.set(clientY - top);
       }
     },
-    [mouseX, mouseY],
+    [mouseX, mouseY]
   );
 
   const handleMouseOut = useCallback(
@@ -49,7 +49,7 @@ export function MagicCard({
         mouseY.set(-gradientSize);
       }
     },
-    [handleMouseMove, mouseX, gradientSize, mouseY],
+    [handleMouseMove, mouseX, gradientSize, mouseY]
   );
 
   const handleMouseEnter = useCallback(() => {
@@ -81,7 +81,7 @@ export function MagicCard({
       className={cn("group relative rounded-[inherit]", className)}
     >
       <motion.div
-        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-border duration-300 group-hover:opacity-100"
+        className='pointer-events-none absolute inset-0 rounded-[inherit] bg-border duration-300 group-hover:opacity-100'
         style={{
           background: useMotionTemplate`
           radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
@@ -92,9 +92,9 @@ export function MagicCard({
           `,
         }}
       />
-      <div className="absolute inset-px rounded-[inherit] bg-background" />
+      <div className='absolute inset-px rounded-[inherit] bg-background' />
       <motion.div
-        className="pointer-events-none absolute inset-px rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className='pointer-events-none absolute inset-px rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100'
         style={{
           background: useMotionTemplate`
             radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, ${gradientColor}, transparent 100%)
@@ -102,7 +102,7 @@ export function MagicCard({
           opacity: gradientOpacity,
         }}
       />
-      <div className="relative">{children}</div>
+      <div className='relative'>{children}</div>
     </div>
   );
 }

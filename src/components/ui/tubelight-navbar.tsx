@@ -31,13 +31,13 @@ export function NavBar({ items, className }: NavBarProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const navbarStyle = isMobile
+    ? "fixed bottom-0 left-1/2 -translate-x-1/2 z-50 mb-6"
+    : "fixed top-0 left-1/2 -translate-x-1/2 z-50 mt-6";
+
   return (
-    <div
-      className={cn(
-        "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6",
-        className
-      )}
-    >
+    <div className={cn(navbarStyle, className)}>
+      {" "}
       <div className='flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg'>
         {items.map((item) => {
           const Icon = item.icon;
