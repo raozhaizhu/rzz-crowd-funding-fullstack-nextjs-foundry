@@ -5,32 +5,31 @@ import {
   useChainId,
   useWriteContract,
   useReadContract,
-  useWaitForTransactionReceipt,
+  useWatchContractEvent,
 } from "wagmi";
-import {
-  chainsToContracts,
-  crowdFundingAbi,
-} from "@/constants/crowd-funding-constants";
+import { CID } from "multiformats/cid";
+import { crowdFundingAbi } from "@/constants/crowd-funding-constants";
 import { useState } from "react";
 import { bigint, z } from "zod";
 import { isAddress, parseEther } from "viem";
+import {
+  CONTRACT_ADDRESS,
+  GRACE_MS,
+  ONE_DAY_IN_SECONDS,
+} from "@/constants/global-constants";
 
-type Campaign = {
+export type Campaign = {
   owner: `0x${string}`;
   deadline: bigint;
-  targetInEther: bigint;
-  amountCollectedInEther: bigint;
+  targetInEthWei: bigint;
+  amountCollectedInEthWei: bigint;
   title: string;
   description: string;
+  heroImageCID: string;
   donations: bigint[];
   donators: `0x${string}`[];
 };
-
-type DonationInfo = Pick<Campaign, "donations" | "donators">;
-
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-const ONE_DAY_IN_SECONDS = 24 * 60 * 60 * 1000; // 一天时间，以毫秒计
-const GRACE_MS = 300 * 1000; // 允许延迟 300 秒
+type DonationInfo = [donations: bigint[], donators: `0x${string}`[]];
 
 export const createCampaignInfoSchemaClient = z.object({
   // 校验 owner 格式是否为钱包地址
@@ -54,6 +53,11 @@ export const createCampaignInfoSchemaClient = z.object({
       message: "Description exceeds 256 bytes when encoded",
     }),
 
+  // heroImage必须为标准 CID 格式
+  heroImageCID: z.string().refine((val) => CID.parse(val), {
+    message: "Invalid IPFS CID (failed to parse)",
+  }),
+
   // deadline必须至少在 3 天后（合同本身约定是在未来即可）
   // deadline已经毫秒计
   deadline: z
@@ -62,18 +66,17 @@ export const createCampaignInfoSchemaClient = z.object({
     .min(Date.now() + 3 * ONE_DAY_IN_SECONDS + GRACE_MS, {
       message: "Deadline must be at least 3 days from now",
     }),
-  // 筹集目标为整数，至少 1 eth
-  // TODO foundry 里好像忘记校验 ether 了，要回去修改下合同
-  targetInEther: z.number().int().min(1, "Minimum target is 1 ETH"),
+  // 筹集目标为整数，至少 1 eth，合同内做了灵活处理，但页面上暂且设置了 1 ether 的上限
+  targetInEthWei: z.number().int().min(1, "Minimum target is 1 ETH"),
 });
+export type CreateCampaignInfoSchemaClient = z.infer<
+  typeof createCampaignInfoSchemaClient
+>;
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setter                                   */
 /* -------------------------------------------------------------------------- */
 
-export type CreateCampaignInfoSchemaClient = z.infer<
-  typeof createCampaignInfoSchemaClient
->;
 /**
  * @notice 该函数用于调用创建活动函数，并获得对应状态/数据
  * @param info 用于创建合同的表格信息
@@ -83,11 +86,22 @@ export type CreateCampaignInfoSchemaClient = z.infer<
 export const useCreateCampaign = () => {
   const { address } = useAccount();
   const chainId = useChainId();
+  const [campaignId, setCampaignId] = useState<number | null>(null);
+
   // 解构合同函数和状态
   const { writeContract, isPending, error, data: txHash } = useWriteContract();
+  // 监听 CrowdFundingCreated 事件
+  // 监听 CrowdFundingCreated 事件
 
   const createCampaign = (info: CreateCampaignInfoSchemaClient) => {
-    const { owner, title, description, deadline, targetInEther } = info;
+    const {
+      owner,
+      title,
+      description,
+      heroImageCID,
+      deadline,
+      targetInEthWei,
+    } = info;
 
     // 检查钱包和链的状态
     if (!address) throw new Error("Wallet not connected");
@@ -102,8 +116,9 @@ export const useCreateCampaign = () => {
           owner,
           title,
           description,
+          heroImageCID,
           deadline,
-          parseEther(String(targetInEther)),
+          parseEther(String(targetInEthWei)),
         ],
       });
     } catch (error) {

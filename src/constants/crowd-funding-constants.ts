@@ -28,9 +28,10 @@ export const crowdFundingAbi = [
       { name: "_owner", type: "address", internalType: "address" },
       { name: "_title", type: "string", internalType: "string" },
       { name: "_description", type: "string", internalType: "string" },
+      { name: "_heroImageCID", type: "string", internalType: "string" },
       { name: "_deadline", type: "uint256", internalType: "uint256" },
       {
-        name: "_targetInEther",
+        name: "_targetInEthWei",
         type: "uint256",
         internalType: "uint256",
       },
@@ -62,18 +63,23 @@ export const crowdFundingAbi = [
             internalType: "uint256",
           },
           {
-            name: "targetInEther",
+            name: "targetInEthWei",
             type: "uint256",
             internalType: "uint256",
           },
           {
-            name: "amountCollectedInEther",
+            name: "amountCollectedInEthWei",
             type: "uint256",
             internalType: "uint256",
           },
           { name: "title", type: "string", internalType: "string" },
           {
             name: "description",
+            type: "string",
+            internalType: "string",
+          },
+          {
+            name: "heroImageCID",
             type: "string",
             internalType: "string",
           },
@@ -109,18 +115,23 @@ export const crowdFundingAbi = [
             internalType: "uint256",
           },
           {
-            name: "targetInEther",
+            name: "targetInEthWei",
             type: "uint256",
             internalType: "uint256",
           },
           {
-            name: "amountCollectedInEther",
+            name: "amountCollectedInEthWei",
             type: "uint256",
             internalType: "uint256",
           },
           { name: "title", type: "string", internalType: "string" },
           {
             name: "description",
+            type: "string",
+            internalType: "string",
+          },
+          {
+            name: "heroImageCID",
             type: "string",
             internalType: "string",
           },
@@ -159,18 +170,23 @@ export const crowdFundingAbi = [
             internalType: "uint256",
           },
           {
-            name: "targetInEther",
+            name: "targetInEthWei",
             type: "uint256",
             internalType: "uint256",
           },
           {
-            name: "amountCollectedInEther",
+            name: "amountCollectedInEthWei",
             type: "uint256",
             internalType: "uint256",
           },
           { name: "title", type: "string", internalType: "string" },
           {
             name: "description",
+            type: "string",
+            internalType: "string",
+          },
+          {
+            name: "heroImageCID",
             type: "string",
             internalType: "string",
           },
@@ -201,28 +217,6 @@ export const crowdFundingAbi = [
   },
   {
     type: "function",
-    name: "sCampaigns",
-    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    outputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "deadline", type: "uint256", internalType: "uint256" },
-      {
-        name: "targetInEther",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "amountCollectedInEther",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      { name: "title", type: "string", internalType: "string" },
-      { name: "description", type: "string", internalType: "string" },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "sIdOfCampaign",
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
@@ -240,6 +234,11 @@ export const crowdFundingAbi = [
       },
     ],
     anonymous: false,
+  },
+  {
+    type: "error",
+    name: "CrowdFunding__CampaignExceededDeadLine",
+    inputs: [],
   },
   {
     type: "error",

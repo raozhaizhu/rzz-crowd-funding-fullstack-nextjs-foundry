@@ -1,18 +1,19 @@
-"use client";
-
 // ANCHOR React & library
 
+import ContractPageComponent from "./page-component";
+
 // ANCHOR Components
-import Cards from "@/components/cards";
-import Hero from "@/components/hero";
 
 // ANCHOR Types & Interfaces
-
+type PageProps = {
+  params: { slug: string };
+};
 // ANCHOR Constants
 
 // ANCHOR Component definition
-const HomePageComponent = () => {
+const ContractPage = ({ params }: PageProps) => {
   // ANCHOR Hooks (state, ref, effect, etc.)
+  const { slug } = params;
 
   // ANCHOR Derived values (memo, callback)
 
@@ -21,11 +22,6 @@ const HomePageComponent = () => {
   // ANCHOR Render helpers (optional functions returning JSX)
 
   // ANCHOR Render
-  return (
-    <section className='container mx-auto'>
-      <Hero />
-      <Cards />
-    </section>
-  );
+  return <ContractPageComponent slug={slug} />;
 };
-export default HomePageComponent;
+export default ContractPage;

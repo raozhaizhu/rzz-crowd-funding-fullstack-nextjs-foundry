@@ -3,8 +3,8 @@
 // type Campaign = {
 //   owner: number;
 //   deadline: number;
-//   targetInEther: number;
-//   amountCollectedInEther: number;
+//   targetInEthWei: number;
+//   amountCollectedInEthWei: number;
 //   title: string;
 //   description: string;
 //   donations: number[];
@@ -13,7 +13,7 @@
 
 // type CreateCampaignInfo = Pick<
 //   Campaign,
-//   "owner" | "title" | "description" | "deadline" | "targetInEther"
+//   "owner" | "title" | "description" | "deadline" | "targetInEthWei"
 // >;
 
 // type DonationInfo = Pick<Campaign, "donations" | "donators">;
@@ -30,14 +30,14 @@
 
 // const useCrowdFunding = create<Actions>()((set, get) => ({
 //   //   createCampaign: async (info) => {
-//   //     const { owner, title, description, deadline, targetInEther } = info;
+//   //     const { owner, title, description, deadline, targetInEthWei } = info;
 //   //     try {
 //   //       const transaction = await contract.createCampaign(
 //   //         owner,
 //   //         title,
 //   //         description,
 //   //         deadline,
-//   //         targetInEther
+//   //         targetInEthWei
 //   //       );
 //   //     } catch (error) {
 //   //       // HACK It's a client console.log, it should be commented out before deployment.

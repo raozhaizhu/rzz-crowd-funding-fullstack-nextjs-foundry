@@ -28,10 +28,12 @@ const Header = () => {
   // ANCHOR Render
 
   return (
-    <>
+    <header className='h-20'>
       <NavBar items={navItems} />
-      <ConnectButton />
-    </>
+      <div className='container mx-auto flex justify-end mt-4'>
+        <ConnectButton />
+      </div>
+    </header>
   );
 };
 export default Header;
