@@ -5,17 +5,15 @@ import {
   useChainId,
   useWriteContract,
   useReadContract,
-  useWatchContractEvent,
 } from "wagmi";
 import { CID } from "multiformats/cid";
 import { crowdFundingAbi } from "@/constants/crowd-funding-constants";
-import { useState } from "react";
-import { bigint, z } from "zod";
+import { z } from "zod";
 import { isAddress, parseEther } from "viem";
 import {
-  CONTRACT_ADDRESS,
   GRACE_MS,
   ONE_DAY_IN_SECONDS,
+  SEPOLIA_CONTRACT_ADDRESS,
 } from "@/constants/global-constants";
 
 export type Campaign = {
@@ -86,12 +84,9 @@ export type CreateCampaignInfoSchemaClient = z.infer<
 export const useCreateCampaign = () => {
   const { address } = useAccount();
   const chainId = useChainId();
-  const [campaignId, setCampaignId] = useState<number | null>(null);
 
   // 解构合同函数和状态
   const { writeContract, isPending, error, data: txHash } = useWriteContract();
-  // 监听 CrowdFundingCreated 事件
-  // 监听 CrowdFundingCreated 事件
 
   const createCampaign = (info: CreateCampaignInfoSchemaClient) => {
     const {
@@ -109,7 +104,8 @@ export const useCreateCampaign = () => {
 
     try {
       writeContract({
-        address: CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+        // address: ANVIL_CONTRACT_ADDRESS, // 本地合同地址，暂且硬编码
+        address: SEPOLIA_CONTRACT_ADDRESS, // sepolia合同地址，暂且硬编码
         abi: crowdFundingAbi,
         functionName: "createCampaign",
         args: [
@@ -152,7 +148,7 @@ export const useDonateToCampaign = () => {
 
     try {
       writeContract({
-        address: CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+        address: SEPOLIA_CONTRACT_ADDRESS, // 合同地址，暂且硬编码
         abi: crowdFundingAbi,
         functionName: "donateToCampaign",
         args: [id],
@@ -174,7 +170,24 @@ export const useDonateToCampaign = () => {
 /* -------------------------------------------------------------------------- */
 /*                                   Getter                                   */
 /* -------------------------------------------------------------------------- */
+/**
+ * @notice 检查活动是否超过死线
+ * @returns  未超过返回true， 否则false
+ */
+export const useGetIfCampaignDonatable = (id: number) => {
+  const { data } = useReadContract({
+    address: SEPOLIA_CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+    abi: crowdFundingAbi,
+    functionName: "getCampaign",
+    args: [BigInt(id)],
+  });
 
+  const campaign = data as Campaign | undefined;
+
+  if (!campaign || new Date() >= new Date(Number(BigInt(campaign.deadline))))
+    return false;
+  return true;
+};
 /**
  * @notice 该函数用于查询活动，并获得对应状态/数据
  * @param id 目标合同的 id
@@ -186,7 +199,7 @@ export const useGetCampaign = (id: number) => {
     error,
     isPending,
   } = useReadContract({
-    address: CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+    address: SEPOLIA_CONTRACT_ADDRESS, // 合同地址，暂且硬编码
     abi: crowdFundingAbi,
     functionName: "getCampaign",
     args: [BigInt(id)],
@@ -211,7 +224,7 @@ export const useGetCampaignsPaginated = (offset: number, limit: number) => {
     error,
     isPending,
   } = useReadContract({
-    address: CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+    address: SEPOLIA_CONTRACT_ADDRESS, // 合同地址，暂且硬编码
     abi: crowdFundingAbi,
     functionName: "getCampaignsPaginated",
     args: [BigInt(offset), BigInt(limit)],
@@ -234,7 +247,7 @@ export const useGetAllCampaigns = () => {
     error,
     isPending,
   } = useReadContract({
-    address: CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+    address: SEPOLIA_CONTRACT_ADDRESS, // 合同地址，暂且硬编码
     abi: crowdFundingAbi,
     functionName: "getAllCampaigns",
     args: [],
@@ -257,7 +270,7 @@ export const useGetDonatorsAndDonations = (id: number) => {
     error,
     isPending,
   } = useReadContract({
-    address: CONTRACT_ADDRESS, // 合同地址，暂且硬编码
+    address: SEPOLIA_CONTRACT_ADDRESS, // 合同地址，暂且硬编码
     abi: crowdFundingAbi,
     functionName: "getDonatorsAndDonations",
     args: [BigInt(id)],

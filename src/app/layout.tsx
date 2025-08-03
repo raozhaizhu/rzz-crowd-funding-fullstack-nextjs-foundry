@@ -33,7 +33,9 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
-          <main className='min-h-[calc(100vh - 400px)]'> {children}</main>
+          <main className='min-h-[calc(100vh-269px)] md:min-h-[calc(100vh-169px)]'>
+            {children}
+          </main>
           <Footer />
         </Providers>
         <Toaster />

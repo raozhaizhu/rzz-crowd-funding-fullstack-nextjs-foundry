@@ -18,6 +18,9 @@ export const chainsToContracts: ContractsConfig = {
   31337: {
     crowdFundingContractAddress: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
   },
+  11155111: {
+    crowdFundingContractAddress: "0x6d21ab537862a8d0302cdb1fb4cfd1f76aee3b5c",
+  },
 };
 
 export const crowdFundingAbi = [

@@ -1,10 +1,6 @@
 // ANCHOR React & library
 import { useEffect, useState } from "react";
-import {
-  useAccount,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-} from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // ANCHOR Components
@@ -22,7 +18,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
@@ -38,10 +33,7 @@ import {
   useCreateCampaign,
 } from "@/hooks/use-crowd-funding-contract";
 import { toast } from "sonner";
-import { CONTRACT_ADDRESS, DEFAULT_CID } from "@/constants/global-constants";
-import { crowdFundingAbi } from "@/constants/crowd-funding-constants";
-import { decodeEventLog, parseAbiItem } from "viem";
-import { publicClient } from "@/configs/client";
+
 // ANCHOR Constants
 const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 const DEFAULT_VALUES = {
@@ -108,7 +100,8 @@ const CreateCampaignForm = () => {
         ),
         action: {
           label: "View on Etherscan",
-          onClick: () => window.open(`https://etherscan.io/tx/${txHash}`),
+          onClick: () =>
+            window.open(`https://sepolia.etherscan.io/tx/${txHash}`),
         },
       });
     }
@@ -131,11 +124,11 @@ const CreateCampaignForm = () => {
   };
 
   return (
-    <Card className='p-0 md:w-3/4 shadow-none border-none'>
+    <Card className='p-4 w-full md:w-3/4 mx-4 md:mx-0'>
       <CardHeader className='border-b border-border p-4 [.border-b]:pb-4'>
         <CardTitle className='text-xl mb-2'>Create Campaign</CardTitle>
         <CardDescription>
-          Enter your information to create the campaign
+          Enter the details to set up your campaign
         </CardDescription>
       </CardHeader>
       <CardContent className='p-4'>
@@ -297,15 +290,13 @@ const CreateCampaignForm = () => {
                 </FormItem>
               )}
             />
-            <CardFooter className='p-4 border-t border-border [.border-t]:pt-4'>
-              <Button
-                className='w-full'
-                type='submit'
-                disabled={isPending}
-              >
-                {isPending ? "Now Creating..." : "Create Campaign"}
-              </Button>
-            </CardFooter>
+            <Button
+              className='w-full md:w-1/2 md:mx-auto'
+              type='submit'
+              disabled={isPending}
+            >
+              {isPending ? "Now Creating..." : "Create Campaign"}
+            </Button>
           </form>
         </Form>
       </CardContent>

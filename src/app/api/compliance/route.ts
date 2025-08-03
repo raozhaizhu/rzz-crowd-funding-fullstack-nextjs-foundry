@@ -11,7 +11,7 @@ export type VerifyAddressComplianceRequestBody = {
  * @param Request 内含用户 address，idempotencyKey
  */
 
-export const verifyAddressCompliance = async (request: Request) => {
+export const POST = async (request: Request) => {
   try {
     // 获取地址和幂等键，不存在就报错
     const { address, idempotencyKey } =

@@ -1,19 +1,22 @@
 "use client";
 // ANCHOR React & library
-import { Home, User, Briefcase, FileText } from "lucide-react";
+import { Home, Flag, BookOpen, FileSearch } from "lucide-react";
 
 // ANCHOR Components
 import { NavBar } from "@/components/ui/tubelight-navbar";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 // ANCHOR Types & Interfaces
 
 // ANCHOR Constants
 const navItems = [
-  { name: "Home", url: "#", icon: Home },
-  { name: "About", url: "#", icon: User },
-  { name: "Projects", url: "#", icon: Briefcase },
-  { name: "Resume", url: "#", icon: FileText },
+  { name: "Home", url: "/", icon: Home },
+  { name: "Campaigns", url: "/campaigns", icon: Flag },
+  {
+    name: "Etherscan",
+    url: "https://sepolia.etherscan.io/address/0x6d21ab537862a8d0302cdb1fb4cfd1f76aee3b5c",
+    icon: FileSearch,
+  },
+  { name: "Introduce", url: "/introduce", icon: BookOpen },
 ];
 // ANCHOR Component definition
 const Header = () => {
@@ -28,11 +31,8 @@ const Header = () => {
   // ANCHOR Render
 
   return (
-    <header className='h-20'>
+    <header>
       <NavBar items={navItems} />
-      <div className='container mx-auto flex justify-end mt-4'>
-        <ConnectButton />
-      </div>
     </header>
   );
 };

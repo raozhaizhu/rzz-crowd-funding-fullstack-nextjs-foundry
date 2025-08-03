@@ -1,48 +1,31 @@
-import { MoveRight, PhoneCall } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { type ReactNode } from "react";
+import ExploreCampaignById from "../explore-campaign-by-id";
 
 function HeroComponent({ children }: { children: ReactNode }) {
   return (
-    <div className='w-full  py-20 lg:py-40'>
-      <div className='container mx-auto'>
-        <div className='grid grid-cols-1 gap-8 items-center lg:grid-cols-2'>
+    <div className='w-full py-20 lg:py-40'>
+      <div className='grid grid-cols-1 gap-8 items-center lg:grid-cols-2'>
+        <div className='flex gap-4 flex-col items-center mx-4 md:mx-0'>
           <div className='flex gap-4 flex-col'>
             <div>
-              <Badge variant='outline'>We&apos;re live!</Badge>
+              <Badge variant='secondary'>We&apos;re live!</Badge>
             </div>
-            <div className='flex gap-4 flex-col'>
-              <h1 className='text-5xl md:text-7xl max-w-lg tracking-tighter text-left font-regular'>
-                This is the start of something!
-              </h1>
-              <p className='text-xl leading-relaxed tracking-tight text-muted-foreground max-w-md text-left'>
-                Managing a small business today is already tough. Avoid further
-                complications by ditching outdated, tedious trade methods. Our
-                goal is to streamline SMB trade, making it easier and faster
-                than ever.
-              </p>
-            </div>
-            <div className='flex flex-row gap-4'>
-              <Button
-                size='lg'
-                className='gap-4'
-                variant='outline'
-              >
-                Jump on a call <PhoneCall className='w-4 h-4' />
-              </Button>
-              <Button
-                size='lg'
-                className='gap-4'
-              >
-                Sign up here <MoveRight className='w-4 h-4' />
-              </Button>
-            </div>
+            <h1 className='text-5xl md:text-7xl max-w-lg tracking-tighter text-left font-regular text-white'>
+              This is the start of something!
+            </h1>
+            <p className='text-xl leading-relaxed tracking-tight max-w-lg text-left text-white/90'>
+              Running a crowdfunding campaign can be challenging. Avoid extra
+              hurdles by using our platform to simplify fundraising. Our mission
+              is to make collecting funds easier, faster, and more reliable for
+              everyone.
+            </p>
           </div>
-          <div className='flex justify-center items-center bg-muted rounded-md aspect-square'>
-            {children}
+          <div className='flex flex-row gap-4'>
+            <ExploreCampaignById />
           </div>
         </div>
+        <div className='flex justify-center items-center'>{children}</div>
       </div>
     </div>
   );

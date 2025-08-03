@@ -1,14 +1,17 @@
 "use client";
+import Link from "next/link";
 // ANCHOR React & library
 
 // ANCHOR Components
 import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 // ANCHOR Types & Interfaces
 
 // ANCHOR Constants
 const brandName = "Raozhaizhu";
 const logo = (
+  /* eslint-disable @next/next/no-img-element */
   <img
     src='/images/logo-840.png'
     alt='rzz-logo'
@@ -18,14 +21,39 @@ const logo = (
 const socialLinks = [
   {
     icon: (
+      /* eslint-disable @next/next/no-img-element */
       <img
         src='/images/github.svg'
         alt='github-logo'
         className='h-5 w-5'
       />
     ),
-    href: "https://github.com/raozhaizhu://twitter.com",
-    label: "Github",
+    href: "https://github.com/raozhaizhu/rzz-crowd-funding-foundry",
+    label: "Contract Source Code",
+  },
+  {
+    icon: (
+      /* eslint-disable @next/next/no-img-element */
+      <img
+        src='/images/github.svg'
+        alt='github-logo'
+        className='h-5 w-5'
+      />
+    ),
+    href: "https://github.com/raozhaizhu/rzz-crowd-funding-fullstack-nextjs-foundry",
+    label: "Website Source Code",
+  },
+  {
+    icon: (
+      /* eslint-disable @next/next/no-img-element */
+      <img
+        src='/images/etherscan.svg'
+        alt='github-logo'
+        className='h-5 w-5'
+      />
+    ),
+    href: "https://sepolia.etherscan.io/address/0x6d21ab537862a8d0302cdb1fb4cfd1f76aee3b5c",
+    label: "Etherscan Contract Address",
   },
 ];
 const mainLinks = [
@@ -54,39 +82,46 @@ const Footer = () => {
 
   // ANCHOR Render
   return (
-    <footer className='pb-4 pt-8 lg:pb-8 lg:pt-16'>
+    <footer className='pb-4 pt-4 lg:pb-8 lg:pt-8 bg-slate-900/10'>
       <div className='px-4 lg:px-8'>
         <div className='flex items-center justify-between'>
-          <a
+          <Link
             href='/'
             className='flex items-center gap-x-2'
             aria-label={brandName}
           >
             {logo}
             <span className='font-bold text-xl'>{brandName}</span>
-          </a>
+          </Link>
           <ul className='flex list-none space-x-3'>
             {socialLinks.map((link, i) => (
               <li key={i}>
-                <Button
-                  variant='secondary'
-                  size='icon'
-                  className='h-10 w-10 rounded-full'
-                  asChild
-                >
-                  <a
-                    href={link.href}
-                    target='_blank'
-                    aria-label={link.label}
-                  >
-                    {link.icon}
-                  </a>
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant='secondary'
+                      size='icon'
+                      className='h-10 w-10 rounded-full'
+                      asChild
+                    >
+                      <Link
+                        href={link.href}
+                        target='_blank'
+                        aria-label={link.label}
+                      >
+                        {link.icon}
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{link.label}</p>
+                  </TooltipContent>
+                </Tooltip>
               </li>
             ))}
           </ul>
         </div>
-        <div className='border-t mt-6 pt-6 md:mt-4 md:pt-8 md:grid md:grid-cols-10'>
+        <div className='border-t border-gray-300 mt-6 pt-6 md:mt-4 md:pt-8 md:grid md:grid-cols-10'>
           <nav className='md:mt-0 md:col-[4/11]'>
             <ul className='list-none flex flex-wrap -my-1 -mx-2 md:justify-end'>
               {mainLinks.map((link, i) => (
@@ -94,12 +129,12 @@ const Footer = () => {
                   key={i}
                   className='my-1 mx-2 shrink-0'
                 >
-                  <a
+                  <Link
                     href={link.href}
                     className='text-sm text-primary underline-offset-4 hover:underline'
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -111,12 +146,12 @@ const Footer = () => {
                   key={i}
                   className='my-1 mx-3 shrink-0'
                 >
-                  <a
+                  <Link
                     href={link.href}
                     className='text-sm text-muted-foreground underline-offset-4 hover:underline'
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,7 +1,6 @@
 "use effect";
 // ANCHOR React & library
 import z from "zod";
-
 // ANCHOR Components
 import { AuthorCard } from "./content-card";
 import { Button } from "./ui/button";
@@ -17,9 +16,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  useGetAllCampaigns,
+  useGetIfCampaignDonatable,
   useGetCampaignsPaginated,
   useDonateToCampaign,
+  Campaign,
 } from "@/hooks/use-crowd-funding-contract";
 import { Input } from "@/components/ui/input";
 // ANCHOR Types & Interfaces
@@ -33,7 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 const donateSchema = z.object({
@@ -46,16 +46,43 @@ type DonateSchema = z.infer<typeof donateSchema>;
 // ANCHOR Constants
 const OFFSET = 0;
 const LIMIT = 6;
+
 // ANCHOR Component definition
 const Cards = () => {
   // ANCHOR Hooks (state, ref, effect, etc.)
   const { campaigns } = useGetCampaignsPaginated(OFFSET, LIMIT);
-  const { address } = useAccount();
+  // ANCHOR Render helpers (optional functions returning JSX)
+  const cards = campaigns?.map((campaign, index) => (
+    <CustomCard
+      key={index}
+      campaign={campaign}
+      index={index}
+    />
+  ));
+  // ANCHOR Render
+  return (
+    // <section className='flex flex-wrap gap-4 justify-center '>{cards}</section>
+    <section className='mx-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+      {cards}
+    </section>
+  );
+};
+export default Cards;
 
+const CustomCard = ({
+  campaign,
+  index,
+}: {
+  campaign: Campaign;
+  index: number;
+}) => {
+  const { address } = useAccount();
   const { donateToCampaign, isPending, error, txHash } = useDonateToCampaign();
   const { isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
   });
+  const [open, setOpen] = useState<boolean>(false);
+  const donatable = useGetIfCampaignDonatable(index + OFFSET);
 
   const form = useForm<DonateSchema>({
     resolver: zodResolver(donateSchema),
@@ -64,10 +91,10 @@ const Cards = () => {
       value: 0.001,
     },
   });
-
   useEffect(() => {
     if (error) toast.error(error.message);
-    if (txHash && isSuccess)
+    if (txHash) setOpen(false);
+    if (txHash && isSuccess) {
       toast.success("Donation Successful!", {
         description: (
           <div className='space-y-1'>
@@ -85,129 +112,138 @@ const Cards = () => {
         ),
         action: {
           label: "View on Etherscan",
-          onClick: () => window.open(`https://etherscan.io/tx/${txHash}`),
+          onClick: () =>
+            window.open(`https://sepolia.etherscan.io/tx/${txHash}`),
         },
       });
-  }, [error, txHash]);
-
+    }
+  }, [error, txHash, isSuccess]);
   // ANCHOR Derived values (memo, callback)
+  const id = index + OFFSET;
   // ANCHOR Event handlers
   const handleDonateToCampaign = (data: { id: number; value: number }) => {
-    if (!address) return;
-    donateToCampaign(data.id, data.value);
+    if (address && donatable) donateToCampaign(data.id, data.value);
   };
-  // ANCHOR Render helpers (optional functions returning JSX)
-  const cards =
-    campaigns &&
-    campaigns.map((campaign, index) => (
-      <AuthorCard
-        key={index}
-        author={{
-          //   name: campaign.owner,
-          readTime: `Ends at:\n${new Date(
-            Number(campaign.deadline)
-          ).toLocaleString()}`,
-        }}
-        content={{
-          title: campaign.title,
-          description: campaign.description,
-        }}
-        backgroundImage={`https://ipfs.io/ipfs/${campaign.heroImageCID}`}
-      >
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size='sm'>Donation</Button>
-          </DialogTrigger>
 
-          <DialogContent className='sm:max-w-sm'>
-            <DialogHeader>
-              <DialogTitle>Donate Campaign</DialogTitle>
-              <DialogDescription className='whitespace-pre-wrap'>
-                Please make sure you are donating the correct campaign.
-              </DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-              <form
-                className='flex flex-col gap-4'
-                onSubmit={form.handleSubmit(handleDonateToCampaign)}
-              >
-                <FormItem className='flex flex-col'>
-                  <FormLabel>Campaign Title</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='col-span-3'
-                      value={campaign.title}
-                      disabled
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-
-                <FormField
-                  control={form.control}
-                  name='id'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-col'>
-                      <FormLabel>Campaign Id</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className='col-span-3'
-                          value={index}
-                          disabled
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='value'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-col'>
-                      <FormLabel>Donation Value In Ether</FormLabel>
-                      <FormControl>
-                        <Input
-                          type='number'
-                          {...field}
-                          className='col-span-3'
-                          onChange={(e) => {
-                            const numValue = parseFloat(e.target.value);
-                            field.onChange(numValue);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <DialogFooter className='mt-4'>
-                  <DialogClose asChild>
-                    <Button variant='outline'>Cancel</Button>
-                  </DialogClose>
-                  <Button
-                    type='submit'
-                    disabled={isPending}
-                  >
-                    Donate
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-        <Link href={`/contract/${index}`}>
-          <Button size='sm'>Explore</Button>
-        </Link>
-      </AuthorCard>
-    ));
-
-  // ANCHOR Render
   return (
-    <>
-      <section className='flex flex-wrap gap-4 justify-center'>{cards}</section>
-    </>
+    <AuthorCard
+      key={id}
+      author={{
+        readTime: `Ends at:\n${new Date(
+          Number(campaign.deadline)
+        ).toLocaleString()}`,
+      }}
+      content={{
+        title: campaign.title,
+        description: campaign.description,
+      }}
+      backgroundImage={`https://ipfs.io/ipfs/${campaign.heroImageCID}`}
+    >
+      <Dialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          setOpen(isOpen);
+          if (isOpen) {
+            form.setValue("id", id);
+          }
+        }}
+      >
+        <DialogTrigger asChild>
+          <Button
+            size='sm'
+            variant='secondary'
+            className='w-20'
+          >
+            Donation
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className='sm:max-w-sm'>
+          <DialogHeader>
+            <DialogTitle>Donate Campaign</DialogTitle>
+            <DialogDescription className='whitespace-pre-wrap'>
+              Please make sure you are donating the correct campaign.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              className='flex flex-col gap-4'
+              onSubmit={form.handleSubmit(handleDonateToCampaign)}
+            >
+              <FormItem className='flex flex-col'>
+                <FormLabel>Campaign Title</FormLabel>
+                <FormControl>
+                  <Input
+                    className='col-span-3'
+                    value={campaign.title}
+                    disabled
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+
+              <FormField
+                control={form.control}
+                name='id'
+                render={({ field }) => (
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Campaign Id</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className='col-span-3'
+                        disabled
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='value'
+                render={({ field }) => (
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Donation Value In Ether</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        {...field}
+                        className='col-span-3'
+                        onChange={(e) => {
+                          const numValue = parseFloat(e.target.value);
+                          field.onChange(numValue);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter className='mt-4'>
+                <DialogClose asChild>
+                  <Button variant='outline'>Cancel</Button>
+                </DialogClose>
+                <Button
+                  type='submit'
+                  disabled={isPending}
+                >
+                  Donate
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <Link href={`/campaigns/${id}`}>
+        <Button
+          size='sm'
+          variant='secondary'
+          className='w-20'
+        >
+          Explore
+        </Button>
+      </Link>
+    </AuthorCard>
   );
 };
-export default Cards;
