@@ -19,7 +19,7 @@ const ExploreCampaignById = () => {
   return (
     <>
       <Input
-        className='w-40 placeholder:text-white/90 text-white/90'
+        className='w-40 placeholder:text-gray/90 text-gray/90'
         placeholder='View campaign by id'
         value={id}
         onChange={(e) => {

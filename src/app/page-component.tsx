@@ -3,7 +3,7 @@
 // ANCHOR React & library
 
 // ANCHOR Components
-import Cards from "@/components/cards";
+import Cards from "@/app/cards";
 import Hero from "@/components/hero";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 

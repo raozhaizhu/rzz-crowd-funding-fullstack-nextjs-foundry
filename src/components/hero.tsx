@@ -82,6 +82,7 @@ const CreateCampaignForm = () => {
       toast.error(`${error.message.slice(0, 128)}...`);
     }
     if (txHash && receipt.isSuccess) {
+      form.reset();
       const topicHex = receipt.data?.logs?.[0]?.topics?.[1];
       const campaignId = topicHex && BigInt(topicHex).toString();
 
@@ -119,7 +120,6 @@ const CreateCampaignForm = () => {
   // ANCHOR Event handlers
   const handleCreateCampaign = (data: CreateCampaignInfoSchemaClient) => {
     if (!address) return;
-
     createCampaign(data);
   };
 
@@ -244,6 +244,8 @@ const CreateCampaignForm = () => {
                           align='start'
                         >
                           <Calendar
+                            startMonth={new Date()}
+                            endMonth={new Date(2045, 12)}
                             mode='single'
                             selected={dateValue}
                             captionLayout='dropdown'

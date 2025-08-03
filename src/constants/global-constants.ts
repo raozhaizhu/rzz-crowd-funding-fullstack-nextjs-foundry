@@ -15,3 +15,4 @@ export const NAVBAR = {
   NAVBAR_HEIGHT_MD: 169,
   NAVBAR_HEIGHT_SM: 269,
 };
+export const gatewayDomain = "harlequin-advanced-bobolink-516.mypinata.cloud";

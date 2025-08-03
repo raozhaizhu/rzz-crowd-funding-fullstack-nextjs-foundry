@@ -2,8 +2,8 @@
 // ANCHOR React & library
 import z from "zod";
 // ANCHOR Components
-import { AuthorCard } from "./content-card";
-import { Button } from "./ui/button";
+import { AuthorCard } from "../components/content-card";
+import { Button } from "../components/ui/button";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import {
   Dialog,
@@ -32,10 +32,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "../components/ui/form";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { gatewayDomain } from "@/constants/global-constants";
 const donateSchema = z.object({
   id: z.number().int().min(0),
   value: z.number().min(0.001, {
@@ -50,20 +51,24 @@ const LIMIT = 6;
 // ANCHOR Component definition
 const Cards = () => {
   // ANCHOR Hooks (state, ref, effect, etc.)
-  const { campaigns } = useGetCampaignsPaginated(OFFSET, LIMIT);
+  const { campaigns, isPending, error } = useGetCampaignsPaginated(
+    OFFSET,
+    LIMIT
+  );
   // ANCHOR Render helpers (optional functions returning JSX)
-  const cards = campaigns?.map((campaign, index) => (
-    <CustomCard
-      key={index}
-      campaign={campaign}
-      index={index}
-    />
-  ));
+  if (isPending || !campaigns || !campaigns[0].heroImageCID || error)
+    return <div>Loading...</div>;
+
   // ANCHOR Render
   return (
-    // <section className='flex flex-wrap gap-4 justify-center '>{cards}</section>
     <section className='mx-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-      {cards}
+      {campaigns.map((campaign, index) => (
+        <CustomCard
+          key={index}
+          campaign={campaign}
+          index={index}
+        />
+      ))}
     </section>
   );
 };
@@ -138,7 +143,7 @@ const CustomCard = ({
         title: campaign.title,
         description: campaign.description,
       }}
-      backgroundImage={`https://ipfs.io/ipfs/${campaign?.heroImageCID}`}
+      backgroundImage={`https://${gatewayDomain}/ipfs/${campaign.heroImageCID}`}
     >
       <Dialog
         open={open}
