@@ -113,7 +113,7 @@ const ContractPageComponent = ({ slug }: { slug: string }) => {
         >
           <Image
             src={`https://ipfs.io/ipfs/${campaign?.heroImageCID}`}
-            alt='City'
+            alt={campaign.title}
             fill
             className='w-full h-full rounded-lg object-cover dark:brightness-[0.2] dark:grayscale'
           />

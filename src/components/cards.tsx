@@ -122,6 +122,7 @@ const CustomCard = ({
   const id = index + OFFSET;
   // ANCHOR Event handlers
   const handleDonateToCampaign = (data: { id: number; value: number }) => {
+    if (!donatable) toast.error("Can't donate this campaign, it's ended.");
     if (address && donatable) donateToCampaign(data.id, data.value);
   };
 
@@ -137,7 +138,7 @@ const CustomCard = ({
         title: campaign.title,
         description: campaign.description,
       }}
-      backgroundImage={`https://ipfs.io/ipfs/${campaign.heroImageCID}`}
+      backgroundImage={`https://ipfs.io/ipfs/${campaign?.heroImageCID}`}
     >
       <Dialog
         open={open}
