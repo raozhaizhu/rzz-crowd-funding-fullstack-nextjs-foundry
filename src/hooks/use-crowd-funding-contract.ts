@@ -31,13 +31,17 @@ type DonationInfo = [donations: bigint[], donators: `0x${string}`[]];
 
 export const createCampaignInfoSchemaClient = z.object({
   // 校验 owner 格式是否为钱包地址
-  owner: z.string().refine((val) => isAddress(val), {
-    message: "Owner must be a valid Ethereum address",
-  }),
+  owner: z
+    .string()
+    .min(1, { message: "Please connect the wallet" })
+    .refine((val) => isAddress(val), {
+      message: "Owner must be a valid Ethereum address",
+    }),
 
   // title必须小于 64 字节
   title: z
     .string()
+    .min(1, "Title is required") // 虽然合同并没有要求标题是必要的
     .max(64, "Title must be 64 bytes or less")
     .refine((val) => new TextEncoder().encode(val).length <= 64, {
       message: "Title exceeds 64 bytes when encoded",
@@ -46,15 +50,26 @@ export const createCampaignInfoSchemaClient = z.object({
   // title必须小于 256 字节
   description: z
     .string()
+    .min(1, "Description is required") // 虽然合同并没有要求描述是必要的
     .max(256, "Description must be 256 bytes or less")
     .refine((val) => new TextEncoder().encode(val).length <= 256, {
       message: "Description exceeds 256 bytes when encoded",
     }),
 
   // heroImage必须为标准 CID 格式
-  heroImageCID: z.string().refine((val) => CID.parse(val), {
-    message: "Invalid IPFS CID (failed to parse)",
-  }),
+  heroImageCID: z.string().refine(
+    (val) => {
+      try {
+        CID.parse(val);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    {
+      message: "Invalid IPFS CID (failed to parse)",
+    }
+  ),
 
   // deadline必须至少在 3 天后（合同本身约定是在未来即可）
   // deadline已经毫秒计

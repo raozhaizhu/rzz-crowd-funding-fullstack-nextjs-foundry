@@ -4,7 +4,7 @@ import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // ANCHOR Components
-import { HeroComponent } from "./ui/hero-with-image-text-and-two-buttons";
+import { HeroComponent } from "../components/ui/hero-with-image-text-and-two-buttons";
 import {
   Form,
   FormControl,
@@ -12,20 +12,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Textarea } from "../components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
-import { Calendar } from "./ui/calendar";
+import { Calendar } from "../components/ui/calendar";
 // ANCHOR Types & Interfaces
 import {
   createCampaignInfoSchemaClient,
@@ -37,7 +41,7 @@ import { toast } from "sonner";
 // ANCHOR Constants
 const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 const DEFAULT_VALUES = {
-  owner: "0x1",
+  owner: "",
   title: "",
   description: "",
   heroImageCID: "",
@@ -119,9 +123,11 @@ const CreateCampaignForm = () => {
   const { reset } = form;
   // ANCHOR Event handlers
   const handleCreateCampaign = (data: CreateCampaignInfoSchemaClient) => {
-    if (!address) return;
     createCampaign(data);
   };
+
+  // HACK It's a client console.log, it should be commented out before deployment.
+  console.log("*** address:", address, "***");
 
   return (
     <Card className='p-4 w-full md:w-3/4 mx-4 md:mx-0'>

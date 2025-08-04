@@ -4,7 +4,7 @@
 
 // ANCHOR Components
 import Cards from "@/app/cards";
-import Hero from "@/components/hero";
+import Hero from "@/app/hero";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 // ANCHOR Types & Interfaces
