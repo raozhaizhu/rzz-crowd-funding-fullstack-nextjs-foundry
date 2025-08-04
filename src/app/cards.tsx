@@ -160,7 +160,7 @@ const CustomCard = ({
             variant='secondary'
             className='w-20'
           >
-            Donation
+            Donate
           </Button>
         </DialogTrigger>
 
