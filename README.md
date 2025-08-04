@@ -1,6 +1,7 @@
 # RZZ Crowd Funding Fullstack dApp
 
 \[中文版本在下方 | Chinese version below ⬇️]
+[🔗 智能合约仓库 | Smart Contract Repo](https://github.com/raozhaizhu/rzz-crowd-funding-foundry)
 
 ---
 
