@@ -16,7 +16,11 @@ const navItems = [
     url: "https://sepolia.etherscan.io/address/0x6d21ab537862a8d0302cdb1fb4cfd1f76aee3b5c",
     icon: FileSearch,
   },
-  { name: "Introduce", url: "/introduce", icon: BookOpen },
+  {
+    name: "Introduce",
+    url: "https://github.com/raozhaizhu/rzz-crowd-funding-fullstack-nextjs-foundry",
+    icon: BookOpen,
+  },
 ];
 // ANCHOR Component definition
 const Header = () => {
