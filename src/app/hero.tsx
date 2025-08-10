@@ -127,14 +127,14 @@ const CreateCampaignForm = () => {
   };
 
   // HACK It's a client console.log, it should be commented out before deployment.
-  console.log("*** address:", address, "***");
+  // console.log("*** address:", address, "***");
 
   return (
     <Card className='p-4 w-full md:w-3/4 mx-4 md:mx-0'>
       <CardHeader className='border-b border-border p-4 [.border-b]:pb-4'>
         <CardTitle className='text-xl mb-2'>Create Campaign</CardTitle>
         <CardDescription>
-          Enter the details to set up your campaign
+          Fill in your campaign details to get started
         </CardDescription>
       </CardHeader>
       <CardContent className='p-4'>

@@ -26,12 +26,14 @@ const HomePageComponent = () => {
     <>
       {/* hero 界面，分为左右两侧，左侧为文字+查询活动，右侧为创建活动表格 */}
       <section className='w-full relative overflow-hidden'>
+        {/* video */}
         <video
           autoPlay
           muted
           playsInline
           className='absolute top-0 left-0 w-full h-full object-cover z-[-1]'
           loop
+          preload='true'
         >
           <source
             src='/videos/sea.mp4'
@@ -49,7 +51,7 @@ const HomePageComponent = () => {
       </section>
       {/* 卡片组界面 */}
       <section
-        className={`py-20 w-full bg-cover bg-no-repeat bg-center min-h-[50vh]
+        className={`py-20 w-full bg-cover bg-no-repeat bg-center min-h-dvh
           bg-[url("/images/texture.avif")]`}
       >
         <div className='container mx-auto'>
