@@ -134,7 +134,7 @@ const CreateCampaignForm = () => {
       <CardHeader className='border-b border-border p-4 [.border-b]:pb-4'>
         <CardTitle className='text-xl mb-2'>Create Campaign</CardTitle>
         <CardDescription>
-          Fill in your campaign details to get started
+          Fill in the details to set up your campaign
         </CardDescription>
       </CardHeader>
       <CardContent className='p-4'>
@@ -169,7 +169,7 @@ const CreateCampaignForm = () => {
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='Enter your campaign title here...'
+                      placeholder='Fill in your campaign title here...'
                       {...field}
                       className='col-span-3'
                     />
@@ -186,7 +186,7 @@ const CreateCampaignForm = () => {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Enter your campaign description here...'
+                      placeholder='Fill in your campaign description here...'
                       {...field}
                       className='col-span-3'
                     />
@@ -203,7 +203,7 @@ const CreateCampaignForm = () => {
                   <FormLabel>Hero Image CID</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Enter your CID of hero image here...'
+                      placeholder='Fill in your CID of hero image here...'
                       {...field}
                       className='col-span-3'
                     />

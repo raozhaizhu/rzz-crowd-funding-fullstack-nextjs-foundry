@@ -43,9 +43,6 @@ const HomePageComponent = () => {
         </video>
 
         <div className='container mx-auto relative'>
-          <div className='absolute top-4 md:top-20 lg:top-4 right-48 w-24'>
-            <ConnectButton />
-          </div>
           <Hero />
         </div>
       </section>
