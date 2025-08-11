@@ -4,6 +4,7 @@ import { Home, Flag, BookOpen, FileSearch } from "lucide-react";
 
 // ANCHOR Components
 import { NavBar } from "@/components/ui/tubelight-navbar";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 // ANCHOR Types & Interfaces
 
@@ -35,8 +36,11 @@ const Header = () => {
   // ANCHOR Render
 
   return (
-    <header>
+    <header className='relative'>
       <NavBar items={navItems} />
+      <div className='absolute top-4 right-[5%]'>
+        <ConnectButton />
+      </div>
     </header>
   );
 };

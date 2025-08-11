@@ -4,7 +4,7 @@ import ExploreCampaignById from "../explore-campaign-by-id";
 
 function HeroComponent({ children }: { children: ReactNode }) {
   return (
-    <div className='w-full py-20 lg:py-40'>
+    <div className='w-full py-10 md:py-25 lg:py-40 lg:h-dvh'>
       <div className='grid grid-cols-1 gap-8 items-center lg:grid-cols-2'>
         <div className='flex gap-4 flex-col items-center mx-4 md:mx-0'>
           <div className='flex gap-4 flex-col'>
